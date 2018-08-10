@@ -15,7 +15,7 @@ class Timer():
             "memory_records": [],
         }
         self.name = name
-        self.record_thread: Thread = Thread(target=self.record_metric, args=[self.record_data], daemon=True).start()
+        self.record_thread = Thread(target=self.record_metric, args=[self.record_data], daemon=True).start()
         print()
         print("Starting '{}' benchmark...".format(self.name))
 
