@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>My Webpage</title>
+</head>
+<body>
+<h1>{{ title }}</h1>
+<ul>
+    {% for post in posts %}
+    <li>{{post.title}}
+        <small>{{ post.createdAt }}</small>
+    </li>
+    {% endfor %}
+    
+</ul>
+</body>
+</html>

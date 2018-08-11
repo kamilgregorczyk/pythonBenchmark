@@ -1,1 +1,3 @@
 psutil
+sanic
+jinja2

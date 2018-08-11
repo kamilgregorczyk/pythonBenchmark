@@ -1,0 +1,4 @@
+sanic-jwt
+sanic
+cryptography
+sanic-motor
