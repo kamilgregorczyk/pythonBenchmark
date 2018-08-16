@@ -12,6 +12,10 @@ def get_current_memory_usage():
     return round(psutil.Process(os.getpid()).memory_info().rss * 100 / psutil.virtual_memory().total, 3)
 
 
+def get_current_cpu_usage():
+    return round(psutil.Process(os.getpid()).cpu_percent(), 3)
+
+
 class Timer():
     def __init__(self, name):
         print()
@@ -59,5 +63,5 @@ class Timer():
 
     def record_metric(self, stop_event: threading.Event, cpu_queue: Queue, memory_queue: Queue):
         while not stop_event.wait(0.001):
-            cpu_queue.put(psutil.cpu_percent())
+            cpu_queue.put(get_current_cpu_usage())
             memory_queue.put(get_current_memory_usage())

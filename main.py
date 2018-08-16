@@ -35,7 +35,7 @@ def main():
     test_data_as_json = get_test_data_as_json()
     test_data_as_string = get_test_data_as_string()
     prepare_results_csv()
-    unsorted_list_of_numbers = re.findall("[+-]?\d+(?:\.\d+)?", test_data_as_string)
+    unsorted_list_of_numbers = re.findall("[+-]?[0-9]+", test_data_as_string)
     unsorted_list_of_numbers = unsorted_list_of_numbers[:int(len(unsorted_list_of_numbers) / 11)]
 
     print_welcome_message()
@@ -43,8 +43,8 @@ def main():
     with Timer("B tree"):
         binarytree_test()
 
-    with Timer("Quick sort"):
-        quick_sort_test(unsorted_list_of_numbers)
+    with Timer("Built-in sort"):
+        sorted(unsorted_list_of_numbers)
 
     with Timer("Merge sort"):
         merge_sort(unsorted_list_of_numbers)
@@ -52,7 +52,7 @@ def main():
     with Timer("Regexp for digits"):
         regexp_test(test_data_as_string)
 
-    with Timer("Importing big json file into python"):
+    with Timer("Importing big json file"):
         json_loads_test()
 
     with Timer("Aggregating column from dict and counting median"):

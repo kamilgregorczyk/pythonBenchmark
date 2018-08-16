@@ -1,4 +1,5 @@
 import json
+import random
 import re
 
 from statistics import median
@@ -15,32 +16,39 @@ def aggregation_from_dict_test(data):
                        feature["properties"]["FROM_ST"] is not None]
         to_values = [int(feature["properties"]["TO_ST"]) for feature in data["features"] if
                      feature["properties"]["TO_ST"] is not None]
-        result = [from_values[i] * to_values[i] for i in range(len(from_values))]
+        result = [from_values[d] * to_values[d] for d in range(len(from_values))]
         median(result)
 
 
 def regexp_test(string):
-    re.findall("[+-]?\d+(?:\.\d+)?", string)
+    re.findall("[+-]?[0-9]+", string)
 
 
-def quick_sort_test(arr):
-    less = []
-    pivotList = []
-    more = []
-    if len(arr) <= 1:
-        return arr
-    else:
-        pivot = arr[0]
-        for i in arr:
-            if i < pivot:
-                less.append(i)
-            elif i > pivot:
-                more.append(i)
-            else:
-                pivotList.append(i)
-        less = quick_sort_test(less)
-        more = quick_sort_test(more)
-        return less + pivotList + more
+def quick_sort_test(a, l, r):
+    if l >= r:
+        return
+    pivot_idx = l
+    old_r = r
+    pivot = a[l]
+    l += 1
+    while True:
+        # manual check, does it work when l=pivot_idx, r=l+1 for a[l] <= a[r], and for a[l] > a[r] ?
+        while a[r] > pivot:
+            r -= 1
+
+        if l >= r:
+            break
+
+        while l < r and a[l] <= pivot:
+            l += 1
+
+        # pre-conditions to swap: l == r, or a[l] > pivot from 2nd loop, and a[r] <= pivot from 1st loop
+        a[l], a[r] = a[r], a[l]
+
+    a[pivot_idx], a[r] = a[r], a[pivot_idx]
+
+    quick_sort_test(a, pivot_idx, r)
+    quick_sort_test(a, r + 1, old_r)
 
 
 def merge(l, p, q, r):
