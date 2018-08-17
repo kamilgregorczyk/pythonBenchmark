@@ -13,7 +13,9 @@ def get_current_memory_usage():
 
 
 def get_current_cpu_usage():
-    return round(psutil.Process(os.getpid()).cpu_percent(), 3)
+    process = psutil.Process(os.getpid())
+    usage = process.cpu_percent(interval=1)
+    return round(usage, 3)
 
 
 class Timer():
@@ -29,6 +31,8 @@ class Timer():
                                             daemon=True)
         self.record_thread.start()
         self.start = time.time()
+        self.cpu_samples_queue.put(get_current_cpu_usage())
+        self.memory_samples_queue.put(get_current_memory_usage())
 
     def __enter__(self):
         return self
@@ -37,7 +41,7 @@ class Timer():
         runtime = self.float_to_string(time.time() - self.start)
         self.stop_event.set()
         self.record_thread.join()
-
+        print(self.get_values_from_queue(self.cpu_samples_queue))
         cpu_usage = self.float_to_string(mean(self.get_values_from_queue(self.cpu_samples_queue)), True)
         memory_usage = self.float_to_string(mean(self.get_values_from_queue(self.memory_samples_queue)), True)
         print('Benchmark took {} seconds, used {} CPU and {} RAM'.format(runtime, cpu_usage, memory_usage))
@@ -62,6 +66,6 @@ class Timer():
             writer.writerow([self.name, runtime, cpu_usage, memory_usage])
 
     def record_metric(self, stop_event: threading.Event, cpu_queue: Queue, memory_queue: Queue):
-        while not stop_event.wait(0.001):
+        while not stop_event.wait(0.200):
             cpu_queue.put(get_current_cpu_usage())
             memory_queue.put(get_current_memory_usage())
