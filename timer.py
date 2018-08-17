@@ -41,7 +41,6 @@ class Timer():
         runtime = self.float_to_string(time.time() - self.start)
         self.stop_event.set()
         self.record_thread.join()
-        print(self.get_values_from_queue(self.cpu_samples_queue))
         cpu_usage = self.float_to_string(mean(self.get_values_from_queue(self.cpu_samples_queue)), True)
         memory_usage = self.float_to_string(mean(self.get_values_from_queue(self.memory_samples_queue)), True)
         print('Benchmark took {} seconds, used {} CPU and {} RAM'.format(runtime, cpu_usage, memory_usage))
